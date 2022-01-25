@@ -4,9 +4,44 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var helmet = require('helmet');
+var session = require('express-session');
+var passport = require('passport');
+var GitHubStrategy = require('passport-github2').Strategy;
+var secret = require('./secret');
+
+// ユーザーの情報をデータとして保存する
+// serialize, deserialize: 
+// メモリ上に参照として飛び散ったデータを 0 と 1 で表せるバイナリのデータとして保存できる形式に変換したり、戻したりすること
+passport.serializeUser(function (user, done) {
+  done(null, user);   // done(エラー, 結果)
+});
+
+// 保存されたデータをユーザーの情報として読み出す
+passport.deserializeUser(function (obj, done) {
+  done(null, obj);
+});
+
+passport.use(
+  new GitHubStrategy(
+    {
+      // 認証の戦略オブジェクト
+      clientID: secret.GITHUB_CLIENT_ID,
+      clientSecret: secret.GITHUB_CLIENT_SECRET,
+      callbackURL: 'http://localhost:8000/auth/github/callback'
+    },
+    function (accessToken, refreshToken, profile, done) {
+      process.nextTick(function () {
+        // 認証が終わった後のタイミングで実行
+        return done(null, profile);
+      });
+    }
+  )
+);
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var loginRouter = require('./routes/login');
+var logoutRouter = require('./routes/logout');
+const { application } = require('express');
 
 var app = express();
 app.use(helmet());
@@ -21,8 +56,38 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// セキュリティ強化のための設定
+app.use(
+  session({
+    secret: secret.SESSION_SECRET,  // セッションIDを作成されるときに利用される秘密鍵の文字列
+    resave: false,                  // セッションを必ずストアに保存しない
+    saveUninitialized: false        // セッションが初期化されていなくてもストアに保存しない
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/login', loginRouter);
+app.use('/logout', logoutRouter);
+
+// GETで[/auth/github]へアクセスしたときの処理
+app.get('/auth/github',
+  // GitHubへの認証を行う
+  passport.authenticate('github', { scope: ['user:email'] }),
+  function (req, res) {
+    // リクエストが行われた際の処理
+  }
+);
+
+// GitHubが利用者の許可に対する問い合わせの結果を送るパス[/auth/github/callback]へアクセスしたときの処理
+app.get('/auth/github/callback',
+  passport.authenticate('github', { failureRedirect: '/login' }), //認証失敗時は再度ログインを促す[/login]にリダイレクト
+  function (req, res) {
+    // 認証に成功した場合
+    res.redirect('/');  // [/]へリダイレクト
+  }
+);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
