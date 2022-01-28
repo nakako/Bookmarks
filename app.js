@@ -6,6 +6,20 @@ var logger = require('morgan');
 var helmet = require('helmet');
 var session = require('express-session');
 var passport = require('passport');
+
+/* データベースモデルの読み込み */
+var User = require('./models/user');
+var Bookmark = require('./models/bookmark');
+var Tag = require('./models/tag');
+// Userのテーブルを作成
+User.sync().then(() => {
+  // テーブル作成終了後に実行
+  Bookmark.belongsTo(User, { foreignKey: 'createdBy' });
+  Bookmark.sync();
+  Tag.belongsTo(User, { foreignKey: 'createdBy' });
+  Tag.sync();
+});
+
 var GitHubStrategy = require('passport-github2').Strategy;
 var secret = require('./secret');
 
@@ -32,7 +46,13 @@ passport.use(
     function (accessToken, refreshToken, profile, done) {
       process.nextTick(function () {
         // 認証が終わった後のタイミングで実行
-        return done(null, profile);
+        // ユーザー情報の取得とデータベースへの保存
+        User.upsert({
+          userId: profile.id,
+          username: profile.username
+        }).then(() => {
+          done(null, profile);
+        });
       });
     }
   )
