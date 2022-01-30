@@ -1,0 +1,7 @@
+{
+  "name": "bookmarker",
+  "description": "タグ付きブックマーク",
+  "logo": "",
+  "keywords": ["node"],
+  "image": "heroku/nodejs"
+}
