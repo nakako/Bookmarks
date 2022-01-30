@@ -5,17 +5,20 @@ const { DataTypes } = require('sequelize');
 const uuid = require('uuid');
 const Bookmark = require('../models/bookmark');
 const User = require('../models/user');
+const csrf = require('csurf');  // CSRF対策用
+const csrfProtection = csrf({ cookie: true });
 
 const router = express.Router();
 const authenticationEnsurer = require('./authentication-ensurer');  // 認証を確かめるハンドラ関数
 
 
-router.get('/new', authenticationEnsurer, (req, res, next) => {
-  res.render('new', { user: req.user });  // new.pugの表示
+router.get('/new', authenticationEnsurer, csrfProtection, (req, res, next) => {
+  res.render('new', { user: req.user, csrfToken: req.csrfToken() });  // new.pugの表示
 });
 
+
 /* ブックマークの新規追加 */
-router.post('/', authenticationEnsurer, (req, res, next) => {
+router.post('/', authenticationEnsurer, csrfProtection, (req, res, next) => {
   console.log(req.body);  // debug:確認用コンソール表示
   const bookmarkId = uuid.v4();   // uuid(ランダム16進数文字列)を設定
   const updatedAt = new Date();
@@ -36,36 +39,36 @@ router.post('/', authenticationEnsurer, (req, res, next) => {
   });
 });
 
+// TODO 未使用のはず
+// router.get('/:bookmarkId', authenticationEnsurer, (req, res, next) => {
+//   Bookmark.findOne({
+//     include: [
+//       {
+//         model: User,
+//         attributes: ['userId', 'username']
+//       }
+//     ],
+//     where: {
+//       bookmarkId: req.params.bookmarkId
+//     },
+//     order: [['updatedAt', 'DESC']]
+//   }).then((bookmark) => {
+//     if (bookmark) {
+//       res.render('bookmark', {
+//         user: req.user,
+//         bookmark: bookmark,
+//         users: [req.user]
+//       });
+//     } else {
+//       const err = new Error('指定されたブックマークは見つかりません');
+//       err.status = 404;
+//       next(err);
+//     }
+//   });
+// });
 
-router.get('/:bookmarkId', authenticationEnsurer, (req, res, next) => {
-  Bookmark.findOne({
-    include: [
-      {
-        model: User,
-        attributes: ['userId', 'username']
-      }
-    ],
-    where: {
-      bookmarkId: req.params.bookmarkId
-    },
-    order: [['updatedAt', 'DESC']]
-  }).then((bookmark) => {
-    if (bookmark) {
-      res.render('bookmark', {
-        user: req.user,
-        bookmark: bookmark,
-        users: [req.user]
-      });
-    } else {
-      const err = new Error('指定されたブックマークは見つかりません');
-      err.status = 404;
-      next(err);
-    }
-  });
-});
 
-
-router.get('/:bookmarkId/edit', authenticationEnsurer, (req, res, next) => {
+router.get('/:bookmarkId/edit', authenticationEnsurer, csrfProtection, (req, res, next) => {
   Bookmark.findOne({
     where: {
       bookmarkId: req.params.bookmarkId
@@ -74,7 +77,8 @@ router.get('/:bookmarkId/edit', authenticationEnsurer, (req, res, next) => {
     if (isMine(req, bookmark)) {  // 作成者のみが編集フォームを開ける(作成者がログインユーザと一致することを確認)
       res.render('edit', {
         user: req.user,
-        bookmark: bookmark
+        bookmark: bookmark,
+        csrfToken: req.csrfToken()
       });
     } else {
       const err = new Error('指定されたブックマークがない、または、編集する権限がありません');
@@ -85,8 +89,7 @@ router.get('/:bookmarkId/edit', authenticationEnsurer, (req, res, next) => {
 });
 
 
-router.post('/:bookmarkId/', authenticationEnsurer, (req, res, next) => {
-  console.log("データ削除 または 変更 を実行");
+router.post('/:bookmarkId', authenticationEnsurer, csrfProtection, (req, res, next) => {
   Bookmark.findOne({
     where: {
       bookmarkId: req.params.bookmarkId

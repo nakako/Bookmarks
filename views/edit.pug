@@ -3,6 +3,7 @@ extends layout
 block content 
   h3.my-3 ブックマークの編集
   form(method="post", action=`/bookmarks/${bookmark.bookmarkId}?edit=1`)
+    input(type="hidden" name="_csrf" value!=csrfToken)
     div.form-group
       label(for="bookmarkName") 名前
       input(type="text" name="bookmarkName" value=bookmark.bookmarkName)#bookmarkName.form-control
@@ -19,4 +20,5 @@ block content
 
   h3.my-3 危険な変更
   form(method="post", action=`/bookmarks/${bookmark.bookmarkId}?delete=1`)
+    input(type="hidden" name="_csrf" value!=csrfToken)
     button(type="submit").btn.btn-danger このブックマークを削除

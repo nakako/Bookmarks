@@ -1,6 +1,5 @@
 'use strict';
 const express = require('express');
-const { crossOriginResourcePolicy } = require('helmet');
 const router = express.Router();
 const Bookmark = require('../models/bookmark');
 
