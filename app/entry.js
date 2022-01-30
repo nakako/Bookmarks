@@ -1,5 +1,9 @@
+// TODO :　不要？
 'use strict';
 import $ from 'jquery';
+globalThis.jQuery = $;
+import bootstrap from 'bootstrap';
+
 
 // const buttonMemoChange = $('#memo-change-button');
 // buttonMemoChange.click(() => {

@@ -16,10 +16,7 @@ block content
       //- 登録されたブックマークがある場合
       h2 ブックマーク一覧
       table.table 
-        tr 
-          //- デバッグ用
-          th ID
-        
+        tr         
           th 名前
           th タグ
           th メモ
@@ -28,9 +25,6 @@ block content
           th
         each bookmark in bookmarks 
           tr
-            //- デバッグ用
-            td  #{bookmark.bookmarkId}
-
             td
               a(href=`${bookmark.bookmarkURL}`) #{bookmark.bookmarkName}
             //- タグ記載用↓
