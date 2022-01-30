@@ -1,5 +1,5 @@
 'use strict';
-const { TestScheduler } = require('jest');
+// const { TestScheduler } = require('jest');
 const { sequelize, DataTypes } = require('./sequelize-loader');
 
 const Bookmark = sequelize.define(
