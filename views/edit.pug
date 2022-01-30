@@ -1,19 +1,18 @@
 extends layout 
 
 block content 
-  h3 ブックマークの編集
+  h3.my-3 ブックマークの編集
   form(method="post", action=`/bookmarks/${bookmark.bookmarkId}?edit=1`)
-    div
-      h5 名前
-      input(type="text" name="bookmarkName" value=bookmark.bookmarkName)
-      //- textarea(name="bookmarkName") #{bookmark.bookmarkName}
-    div 
-      h5 URL
-      input(type="text" name="bookmarkURL" value=bookmark.bookmarkURL)
-    div
-      h5 タグ(未実装)
-    div 
-      h5 メモ
-      textarea(name="memo") #{bookmark.memo}
-    div
-      button(type="submit") 以上の内容で保存
+    div.form-group
+      label(for="bookmarkName") 名前
+      input(type="text" name="bookmarkName" value=bookmark.bookmarkName)#bookmarkName.form-control
+    div.form-group
+      label(for="bookmarkURL") URL
+      input(type="text" name="bookmarkURL" value=bookmark.bookmarkURL)#bookmarkURL.form-control
+    div.form-group
+      label(for="label") タグ(未実装)
+    div.form-group 
+      label(for="memo") メモ
+      textarea(name="memo")#memo.form-control #{bookmark.memo}
+    div.form-group
+      button(type="submit").btn.btn-info 以上の内容で保存
