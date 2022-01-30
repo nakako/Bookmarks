@@ -15,10 +15,6 @@ const Tag = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false
     },
-    //   bookmarkId: {
-    //     type: DataTypes.UUID,   //1つのタグに複数のbookmarkを紐付けできるように変更が必要
-    //   }
-    // },
     createdBy: {
       type: DataTypes.INTEGER,
       allowNull: false

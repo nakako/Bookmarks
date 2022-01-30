@@ -7,6 +7,7 @@ var helmet = require('helmet');
 var session = require('express-session');
 var passport = require('passport');
 
+
 /* データベースモデルの読み込み */
 var User = require('./models/user');
 var Bookmark = require('./models/bookmark');
@@ -20,6 +21,8 @@ User.sync().then(() => {
   Tag.sync();
 });
 
+
+/* GitHub認証 */
 var GitHubStrategy = require('passport-github2').Strategy;
 var secret = require('./secret');
 
@@ -58,9 +61,12 @@ passport.use(
   )
 );
 
+
+/* ルーター */
 var indexRouter = require('./routes/index');
 var loginRouter = require('./routes/login');
 var logoutRouter = require('./routes/logout');
+var bookmarksRouter = require('./routes/bookmarks');
 
 var app = express();
 app.use(helmet());
@@ -86,9 +92,11 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+// パスの設定
 app.use('/', indexRouter);
 app.use('/login', loginRouter);
 app.use('/logout', logoutRouter);
+app.use('/bookmarks', bookmarksRouter);
 
 // GETで[/auth/github]へアクセスしたときの処理
 app.get('/auth/github',

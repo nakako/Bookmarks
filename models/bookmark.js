@@ -11,18 +11,18 @@ const Bookmark = sequelize.define(
       allowNull: false
     },
     bookmarkName: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT, //STRING：２５５文字までの文字列、TEXT:長さに制限のない文字列
       allowNull: false
     },
     bookmarkURL: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false
     },
     tag: {
-      type: DataTypes.INTEGER
+      type: DataTypes.ARRAY(DataTypes.INTEGER)  // 対応するtagIdを配列内に保存する
     },
     memo: {
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING,
       allowNull: false
     },
     createdBy: {

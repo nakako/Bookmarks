@@ -1,0 +1,19 @@
+extends layout 
+
+block content 
+  h3 ブックマークの編集
+  form(method="post", action=`/bookmarks/${bookmark.bookmarkId}?edit=1`)
+    div
+      h5 名前
+      input(type="text" name="bookmarkName" value=bookmark.bookmarkName)
+      //- textarea(name="bookmarkName") #{bookmark.bookmarkName}
+    div 
+      h5 URL
+      input(type="text" name="bookmarkURL" value=bookmark.bookmarkURL)
+    div
+      h5 タグ(未実装)
+    div 
+      h5 メモ
+      textarea(name="memo") #{bookmark.memo}
+    div
+      button(type="submit") 以上の内容で保存します

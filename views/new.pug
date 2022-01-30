@@ -1,0 +1,17 @@
+//- TODO 不要？
+extends layout 
+
+block content 
+  form(method="post", action="/bookmarks")
+    div 
+      h5 名前
+      input(type="text" name="bookmarkName")
+    div 
+      h5 URL
+      input(type="text" name="bookmarkURL")
+    div 
+      h5 タグ
+    div
+      h5 メモ
+      textarea(name="memo")
+    button(type="submit") ブックマークを保存する
