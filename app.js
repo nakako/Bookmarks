@@ -112,7 +112,14 @@ app.get('/auth/github/callback',
   passport.authenticate('github', { failureRedirect: '/login' }), //認証失敗時は再度ログインを促す[/login]にリダイレクト
   function (req, res) {
     // 認証に成功した場合
-    res.redirect('/');  // [/]へリダイレクト
+    var loginFrom = req.cookies.loginFrom;
+    // オープンリダイレクタ脆弱性対策(内部ページのみへのリダイレクトに制限)
+    if (loginFrom && loginFrom.startsWith('/')) {
+      res.clearCookie('loginFrom');
+      res.redirect(loginFrom);
+    } else {
+      res.redirect('/');
+    }
   }
 );
 

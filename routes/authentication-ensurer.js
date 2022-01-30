@@ -14,7 +14,7 @@ function ensure(req, res, next){
     return next();
   }
   // logout状態
-  res.redirect('/login');
+  res.redirect('/login?from=' + req.originalUrl);
 }
 
 module.exports = ensure;
