@@ -25,7 +25,8 @@ describe('/((login', () => {    // describe(テストを行う対象, テスト�
     return request(app)
       .get('/login')    // [/login]へのGETリクエストを作成
       .expect('Content-Type', 'text/html; charset=utf-8')   // ヘッダの確認
-      .expect(/<a href="\/auth\/github"/)   // body内の確認
+      // .expect(/<a href="\/auth\/github"/)   // body内の確認
+      .expect(/<a class="btn btn-info my-3" href="\/auth\/github"/)   // body内の確認
       .expect(200);   // ステータスコードの確認
   });
 
