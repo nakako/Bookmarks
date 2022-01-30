@@ -26,8 +26,8 @@ User.sync().then(() => {
 var GitHubStrategy = require('passport-github2').Strategy;
 // var secret = require('./secret');
 var GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID || '5b7e2b7c3d75fe73f9e7';
-var GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET || '35ad2a318cf9bc1cc71451f08063909823a98a0e';
-var SESSION_SECRET = process.SESSION_SECRET || 'ae0e3e3f4559a1c8';
+var GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET || '788e538803c85ccd38b02437874804c13ff103b4';
+var SESSION_SECRET = process.env.SESSION_SECRET || 'ae0e3e3f4559a1c8';
 
 // ユーザーの情報をデータとして保存する
 // serialize, deserialize: 
