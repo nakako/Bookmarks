@@ -1,20 +1,16 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
-  div 
-    //- userオブジェクトが存在するかを確認することで、ログイン状態を判定
-    if user 
-      //- ログイン中
-      div 
-        a(href="/logout") #{user.username} をログアウト
-      div 
-        a(href="/bookmarks/new") 予定を作る
-      - var hasBookmark = bookmarks.length > 0
+  div.jumbotron.my-3 
+    h1.display-4 タグ付きブックマーク
+    p.lead GitHubで認証でき、ブックマークをオンラインで管理できるサービスです
+  if user 
+    div 
+      a(href="/bookmarks/new").btn.btn-info ブックマークを登録する
+    - var hasBookmark = bookmarks.length > 0
     if hasBookmark
       //- 登録されたブックマークがある場合
-      h2 ブックマーク一覧
+      h3.my-3 ブックマーク一覧
       table.table 
         tr         
           th 名前
