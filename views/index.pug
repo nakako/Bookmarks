@@ -17,8 +17,7 @@ block content
           th タグ
           th メモ
           th 更新日時
-          th
-          th
+          th 
         each bookmark in bookmarks 
           tr
             td
@@ -31,10 +30,4 @@ block content
               //-   data-user-id=user.userId)#memo-change-button 編集
             td #{bookmark.updatedAt}
             td 
-              a(href=`/bookmarks/${bookmark.bookmarkId}/edit`) 編集
-            td
-              button(type="submit") 削除(未実装)
-    else
-      //- ログアウト中
-      div 
-        a(href="login") ログイン
+              a(href=`/bookmarks/${bookmark.bookmarkId}/edit`) 編集 ・ 削除

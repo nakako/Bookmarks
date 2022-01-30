@@ -14,7 +14,7 @@ router.get('/new', authenticationEnsurer, (req, res, next) => {
   res.render('new', { user: req.user });  // new.pugの表示
 });
 
-
+/* ブックマークの新規追加 */
 router.post('/', authenticationEnsurer, (req, res, next) => {
   console.log(req.body);  // debug:確認用コンソール表示
   const bookmarkId = uuid.v4();   // uuid(ランダム16進数文字列)を設定
@@ -22,7 +22,7 @@ router.post('/', authenticationEnsurer, (req, res, next) => {
   // 取得したブックマーク情報をデータベースに保存
   Bookmark.create({
     bookmarkId: bookmarkId,
-    bookmarkName: req.body.bookmarkName.slice(0, 255) || '(名称未設定)',
+    bookmarkName: req.body.bookmarkName || '(名称未設定)',
     bookmarkURL: req.body.bookmarkURL,
     // tag:
     memo: req.body.memo,
@@ -31,8 +31,8 @@ router.post('/', authenticationEnsurer, (req, res, next) => {
   }).then((bookmark) => {
     // TODO:連動しているパラメータがあれば記載
 
-    // /bookmarks/:bookmarksId にリダイレクトリダイレクト
-    res.redirect('/bookmarks/' + bookmark.bookmarkId);
+    // リダイレクトリダイレクト
+    res.redirect('/');
   });
 });
 
@@ -86,7 +86,7 @@ router.get('/:bookmarkId/edit', authenticationEnsurer, (req, res, next) => {
 
 
 router.post('/:bookmarkId/', authenticationEnsurer, (req, res, next) => {
-  console.log(`/:bookmarkId/edit?edit===1 を実行`);
+  console.log("データ削除 または 変更 を実行");
   Bookmark.findOne({
     where: {
       bookmarkId: req.params.bookmarkId
@@ -94,7 +94,6 @@ router.post('/:bookmarkId/', authenticationEnsurer, (req, res, next) => {
   }).then((bookmark) => {
     if (bookmark && isMine(req, bookmark)) {  // bookmarkが存在していて、作成者がログインユーザと一致することを確認
       if (parseInt(req.query.edit) === 1) {
-        console.log('データベースの更新');
         const updatedAt = new Date();
         // データベースのデータを更新する
         bookmark.update({
@@ -108,9 +107,13 @@ router.post('/:bookmarkId/', authenticationEnsurer, (req, res, next) => {
         }).then((bookmark) => {
           // TODO:追加されているかチェック 不要？
           // リダイレクト
-          console.log('データベースの更新完了');
           res.redirect('/');
         });
+      // データを削除
+      } else if(parseInt(req.query.delete) === 1){
+        console.log("データ削除を実行");
+        bookmark.destroy(); // データベースから削除
+        res.redirect('/');  //リダイレクト
       } else {
         const err = new Error('不正なリクエストです');
         err.status = 400;
@@ -135,5 +138,9 @@ function isMine(req, bookmark) {
   return bookmark && parseInt(bookmark.createdBy) === parseInt(req.user.id);
 }
 
+
+// function deleteBookmark(bookmarkId, done, err){
+//   const promse
+// }
 
 module.exports = router;

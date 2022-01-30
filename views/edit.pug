@@ -15,4 +15,8 @@ block content
       label(for="memo") メモ
       textarea(name="memo")#memo.form-control #{bookmark.memo}
     div.form-group
-      button(type="submit").btn.btn-info 以上の内容で保存
+      button(type="submit").btn.btn-info 以上の内容でブックマークを保存
+
+  h3.my-3 危険な変更
+  form(method="post", action=`/bookmarks/${bookmark.bookmarkId}?delete=1`)
+    button(type="submit").btn.btn-danger このブックマークを削除
