@@ -1,7 +1,6 @@
 'use strict';
-const { parse } = require('@babel/core');
 const express = require('express');
-const { DataTypes } = require('sequelize');
+// const { DataTypes } = require('sequelize');
 const uuid = require('uuid');
 const Bookmark = require('../models/bookmark');
 const User = require('../models/user');
