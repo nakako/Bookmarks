@@ -1,17 +1,17 @@
-//- TODO 不要？
 extends layout 
 
 block content 
-  form(method="post", action="/bookmarks")
-    div 
-      h5 名前
-      input(type="text" name="bookmarkName")
-    div 
-      h5 URL
-      input(type="text" name="bookmarkURL")
-    div 
-      h5 タグ
-    div
-      h5 メモ
-      textarea(name="memo")
-    button(type="submit") ブックマークを保存する
+  form(method="post", action="/bookmarks").my-3
+    div.form-group  
+      label(for="bookmarkName") 名前
+      input(type="text" name="bookmarkName")#bookmarkName.form-control
+    div.form-group 
+      label(for="bookmarkURL") URL
+      input(type="text" name="bookmarkURL")#bookmarkURL.form-control
+    div.form-group 
+      label(for="tag") タグ
+      //- タグ追加する
+    div.form-group 
+      label(for="memo") メモ
+      textarea(name="memo" rows="4")#memo.form-control
+    button(type="submit").btn.btn-info ブックマークを保存する
