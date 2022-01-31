@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const Bookmark = require('../models/bookmark');
+const Tag = require('../models/tag');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -17,6 +18,7 @@ router.get('/', function (req, res, next) {
         title: title,
         user: req.user,
         bookmarks: bookmarks
+        // tags: Tag
       });
     });
   } else {

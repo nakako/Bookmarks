@@ -99,7 +99,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 globalThis.jQuery = jquery__WEBPACK_IMPORTED_MODULE_0___default.a;
- // const buttonMemoChange = $('#memo-change-button');
+ // const tagname = $("#bookmark.tag");
+// console.log(`HTML要素：${tagname}`);
+// const buttonMemoChange = $('#memo-change-button');
 // buttonMemoChange.click(() => {
 //   const bookmarkId = button.data('data-bookmark-id');
 //   const userId = button.data('data-user-id');

@@ -4,6 +4,7 @@ const express = require('express');
 const uuid = require('uuid');
 const Bookmark = require('../models/bookmark');
 const User = require('../models/user');
+const Tag = require('../models/tag');
 const csrf = require('csurf');  // CSRF対策用
 const csrfProtection = csrf({ cookie: true });
 
@@ -12,28 +13,47 @@ const authenticationEnsurer = require('./authentication-ensurer');  // 認証を
 
 
 router.get('/new', authenticationEnsurer, csrfProtection, (req, res, next) => {
-  res.render('new', { user: req.user, csrfToken: req.csrfToken() });  // new.pugの表示
+//   res.render('new', { user: req.user, csrfToken: req.csrfToken() });  // new.pugの表示
+// });
+    Tag.findAll({
+    where: {
+      createdBy: req.user.id
+    }
+  }).then(tags => {
+    res.render('new', {   // new.pugの表示
+      user: req.user,
+      tags: tags,
+      csrfToken: req.csrfToken()
+    });
+  });
 });
 
 
 /* ブックマークの新規追加 */
 router.post('/', authenticationEnsurer, csrfProtection, (req, res, next) => {
-  console.log(req.body);  // debug:確認用コンソール表示
   const bookmarkId = uuid.v4();   // uuid(ランダム16進数文字列)を設定
   const updatedAt = new Date();
+  let tag = [];
+  if(req.body.tag.length > 1){
+    tag = req.body.tag.map(Number);
+  }
+  else{
+    tag.push(Number(req.body.tag));
+  }
+  
   // 取得したブックマーク情報をデータベースに保存
   Bookmark.create({
     bookmarkId: bookmarkId,
     bookmarkName: req.body.bookmarkName || '(名称未設定)',
     bookmarkURL: req.body.bookmarkURL,
-    // tag:
+    tag: tag,
     memo: req.body.memo,
     createdBy: req.user.id,
     updatedAt: updatedAt
   }).then((bookmark) => {
     // TODO:連動しているパラメータがあれば記載
 
-    // リダイレクトリダイレクト
+    // リダイレクト
     res.redirect('/');
   });
 });

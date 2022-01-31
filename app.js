@@ -70,6 +70,7 @@ var indexRouter = require('./routes/index');
 var loginRouter = require('./routes/login');
 var logoutRouter = require('./routes/logout');
 var bookmarksRouter = require('./routes/bookmarks');
+var tagsRouter = require('./routes/tags');
 
 var app = express();
 app.use(helmet());
@@ -100,6 +101,7 @@ app.use('/', indexRouter);
 app.use('/login', loginRouter);
 app.use('/logout', logoutRouter);
 app.use('/bookmarks', bookmarksRouter);
+app.use('/tags', tagsRouter);
 
 // GETで[/auth/github]へアクセスしたときの処理
 app.get('/auth/github',

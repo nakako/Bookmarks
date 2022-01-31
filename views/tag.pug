@@ -1,0 +1,32 @@
+extends layout
+
+block content
+  if user 
+    div.card.my-3
+      div.card-header
+        h4 タグ一覧
+      div.card-body
+        //- tags: ユーザが登録したタグ
+        - var hasTag = tags.length > 0
+        if hasTag
+          //- 登録されたタグがある場合
+          table.table 
+            tr
+              //- debug
+              th
+              th タグ名
+            each tag in tags
+              tr
+                //- debug
+                td #{tag.tagId}
+                td #{tag.tagName}
+        else
+          p.lead 登録されたタグはありません
+      
+    h3.my-3 タグを追加する
+    form(method="post", action="/tags").my-3
+      input(type="hidden" name="_csrf" value!=csrfToken)
+      div.form-group
+        label(for="tagName") タグを入力
+        input(type="text" name="tagName")#tagName.form-control
+      button(tyoe="submit").btn.btn-info タグを追加

@@ -4,7 +4,8 @@ import $ from 'jquery';
 globalThis.jQuery = $;
 import bootstrap from 'bootstrap';
 
-
+// const tagname = $("#bookmark.tag");
+// console.log(`HTML要素：${tagname}`);
 // const buttonMemoChange = $('#memo-change-button');
 // buttonMemoChange.click(() => {
 //   const bookmarkId = button.data('data-bookmark-id');

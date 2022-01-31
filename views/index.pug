@@ -7,6 +7,8 @@ block content
   if user 
     div 
       a(href="/bookmarks/new").btn.btn-info ブックマークを登録する
+      a(href="/tags").btn.btn-info タグを編集する
+    //- bookarks: ユーザが登録したブックマーク
     - var hasBookmark = bookmarks.length > 0
     if hasBookmark
       //- 登録されたブックマークがある場合
@@ -14,20 +16,21 @@ block content
       table.table 
         tr         
           th 名前
+          th URL
           th タグ
           th メモ
-          th 更新日時
+          //- th 更新日時
           th 
         each bookmark in bookmarks 
           tr
             td
               a(href=`${bookmark.bookmarkURL}`) #{bookmark.bookmarkName}
-            //- タグ記載用↓
-            td
+            td #{bookmark.bookmarkURL}
+            td #{bookmark.tag}
             td #{bookmark.memo}
               //- button(
               //-   data-bookmark-id=bookmark.bookmarkId 
               //-   data-user-id=user.userId)#memo-change-button 編集
-            td #{bookmark.updatedAt}
+            //- td #{bookmark.updatedAt}
             td 
               a(href=`/bookmarks/${bookmark.bookmarkId}/edit`) 編集 ・ 削除
