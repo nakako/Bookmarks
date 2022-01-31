@@ -1,6 +1,5 @@
 'use strict';
 const express = require('express');
-// const { DataTypes } = require('sequelize');
 const uuid = require('uuid');
 const Bookmark = require('../models/bookmark');
 const User = require('../models/user');

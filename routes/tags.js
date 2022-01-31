@@ -1,8 +1,8 @@
 'use strict';
 const express = require('express');
 const router = express.Router();
-// const Bookmark = require('../models/bookmark');
-// const User = require('../models/user');
+const Bookmark = require('../models/bookmark');
+const User = require('../models/user');
 const Tag = require('../models/tag');
 const csrf = require('csurf');  // CSRF対策用
 const csrfProtection = csrf({ cookie: true });
@@ -43,6 +43,39 @@ router.post('/', authenticationEnsurer, csrfProtection, (req, res, next) => {
   else{
     console.log("タグが空です");  //debug
     res.redirect('/');
+  }
+});
+
+router.get('/:tagId/search', authenticationEnsurer, (req, res, next) => {
+  if(req.user){
+    Tag.findOne({ 
+      where: { 
+        tagId: req.params.tagId
+      }
+    }).then(tag => {
+      console.log(tag.tagName);
+      Bookmark.findAll({
+        where: {
+          createdBy: req.user.id,
+          tag: [req.params.tagId] //TODO: 部分一致の検索ができない
+          // tag: {
+          //   $in: [req.params.tagId]
+          // }
+        },
+        order: [['updatedAt', 'DESC']]    // 作成日時順にソート
+      }).then((bookmarks) => {
+        res.render('tagsearch', {
+          user: req.user,
+          tagName: tag.tagName,
+          bookmarks: bookmarks
+        });
+      });
+    })
+    // console.log(tagName);
+  }else {
+    res.render('tagsearch', {
+      tagName: tagName
+    });
   }
 });
 
