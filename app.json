@@ -1,6 +1,6 @@
 {
   "name": "bookmarker",
-  "description": "タグ付きブックマーク",
+  "description": "たぐめもブックマーク",
   "logo": "",
   "keywords": ["node"],
   "image": "heroku/nodejs"
