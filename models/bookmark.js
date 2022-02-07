@@ -18,7 +18,7 @@ const Bookmark = sequelize.define(
       allowNull: false
     },
     tag: {
-      type: DataTypes.ARRAY(DataTypes.INTEGER)  // 対応するtagIdを配列内に保存する
+      type: DataTypes.ARRAY(DataTypes.TEXT)  // 対応するtagIdを配列内に保存する
     },
     memo: {
       type: DataTypes.STRING,
