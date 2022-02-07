@@ -12,7 +12,19 @@ block content
       input(type="text" name="bookmarkURL" value=bookmark.bookmarkURL)#bookmarkURL.form-control
     div.form-group
       //- TODO
-      label(for="label") タグ(未実装)
+      label(for="tag") タグ
+      br
+      //- tags: ユーザが登録したタグ
+      - var hasTag = tags.length > 0
+      if hasTag
+        //- 登録されたタグがある場合
+        each tag in tags
+          input(type="checkbox" name="tag" value=tag.tagId)
+          |#{tag.tagName}
+        else
+          p.lead 登録されたタグはありません
+
+      //- label(for="label") タグ(未実装)
     div.form-group 
       label(for="memo") メモ
       textarea(name="memo")#memo.form-control #{bookmark.memo}
