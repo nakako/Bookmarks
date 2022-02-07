@@ -93,11 +93,18 @@ router.get('/:bookmarkId/edit', authenticationEnsurer, csrfProtection, (req, res
     }
   }).then((bookmark) => {
     if (isMine(req, bookmark)) {  // 作成者のみが編集フォームを開ける(作成者がログインユーザと一致することを確認)
-      res.render('edit', {
-        user: req.user,
-        bookmark: bookmark,
-        csrfToken: req.csrfToken()
-      });
+      Tag.findAll({
+        where: {
+          createdBy: req.user.id
+        }
+      }).then(tags => {
+        res.render('edit', {
+          user: req.user,
+          bookmark: bookmark,
+          tags: tags,
+          csrfToken: req.csrfToken()
+        });
+      })
     } else {
       const err = new Error('指定されたブックマークがない、または、編集する権限がありません');
       err.status = 404;
@@ -108,6 +115,14 @@ router.get('/:bookmarkId/edit', authenticationEnsurer, csrfProtection, (req, res
 
 
 router.post('/:bookmarkId', authenticationEnsurer, csrfProtection, (req, res, next) => {
+  let tag = [];
+  if(req.body.tag.length > 1){
+    tag = req.body.tag.map(Number);
+  }
+  else{
+    tag.push(Number(req.body.tag));
+  }
+
   Bookmark.findOne({
     where: {
       bookmarkId: req.params.bookmarkId
@@ -121,7 +136,7 @@ router.post('/:bookmarkId', authenticationEnsurer, csrfProtection, (req, res, ne
           bookmarkId: bookmark.bookmarkId,  // TODO：不要?
           bookmarkName: req.body.bookmarkName,
           bookmarkURL: req.body.bookmarkURL,
-          // tag:
+          tag: tag,
           memo: req.body.memo,
           createdBy: req.user.id,
           updatedAt: updatedAt
