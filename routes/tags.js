@@ -37,7 +37,7 @@ router.post('/', authenticationEnsurer, csrfProtection, (req, res, next) => {
     }).then((tag) => {
         console.log("タグを追加完了");  //debug
         // リダイレクト
-        res.redirect('/');
+        res.redirect('/tags');
     });
   }
   else{

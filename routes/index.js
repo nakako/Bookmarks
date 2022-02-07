@@ -14,11 +14,27 @@ router.get('/', function (req, res, next) {
       },
       order: [['updatedAt', 'DESC']]    // 作成日時順にソート
     }).then(bookmarks => {
-      res.render('index', {
-        title: title,
-        user: req.user,
-        bookmarks: bookmarks
-        // tags: Tag
+      const bookmark_list = bookmarks;
+      Tag.findAll({
+      }).then((tags) => {
+        // tagId->tagNameに変換
+        // tagMap[tagId]=tagNameを作成して検索可能にする
+        const tagMap = new Array();
+        tags.forEach(element => {
+          tagMap[element.tagId] = element.tagName;
+        });
+        // bookmark_listに対応するtagNameを追加
+        bookmark_list.forEach(element => {
+          element.dataValues.tagName = new Array();
+          element.tag.forEach(tagId => {
+            element.dataValues.tagName.push(tagMap[tagId]);
+          });
+        });
+        res.render('index', {
+          title: title,
+          user: req.user,
+          bookmarks: bookmark_list,
+        });
       });
     });
   } else {
